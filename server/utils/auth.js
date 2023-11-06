@@ -8,7 +8,7 @@ const authMiddleware = (context) => {
   // allows token to be sent via  req.query or headers, or req.body
   let token = context.body.token || context.query.token || context.headers.authorization;
 
-  if(context.headers.authorization){
+  if(context.req.headers['authorization']){
     token = token.split(' ').pop().trim();
   }
 
@@ -24,7 +24,7 @@ const authMiddleware = (context) => {
   }
 
   //Return Request Object for GraphQL
-  return context;
+  return context.req;
 }
 
 const signToken = ({username, email, _id}) => {
