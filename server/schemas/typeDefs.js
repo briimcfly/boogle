@@ -11,11 +11,11 @@ type User{
 
 type Book{
     authors: [String]
-    description: String
-    bookId: String
+    description: String!
+    bookId: String!
     image: String
     link: String
-    title: String
+    title: String!
 }
 
 type Auth{
@@ -23,15 +23,25 @@ type Auth{
     user: User
 }
 
+input BookInput {
+    authors: [String]
+    description: String!
+    bookId: String!
+    image: String
+    link: String
+    title: String!
+}
+
 type Query{
     me: User
+    user(username: String, id: ID): User
 }
 
 type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveBook(authors: [String], description: String, bookId: String, image: String, link: String, title: String): User
-    removeBook(bookId: String): User
+    saveBook(bookInput: BookInput!): User // Now expects a BookInput type
+    removeBook(bookId: String!): User
 }
 `
 
