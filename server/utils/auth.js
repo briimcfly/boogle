@@ -4,27 +4,27 @@ const jwt = require('jsonwebtoken');
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
-const authMiddleware = (req) => {
+const authMiddleware = (context) => {
   // allows token to be sent via  req.query or headers, or req.body
-  let token = req.body.token || req.query.token || req.headers.authorization;
+  let token = context.body.token || context.query.token || context.headers.authorization;
 
-  if(req.headers.authorization){
+  if(context.headers.authorization){
     token = token.split(' ').pop().trim();
   }
 
   if(!token){
-    return req;
+    return context;
   } 
 
   try{
     const {data} = jwt.verify(token, secret, {maxAge: expiration});
-    req.user = data;
+    context.user = data;
   } catch {
     console.log('Invalid token');
   }
 
   //Return Request Object for GraphQL
-  return req;
+  return context;
 }
 
 const signToken = ({username, email, _id}) => {
