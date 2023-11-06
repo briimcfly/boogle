@@ -1,5 +1,4 @@
 const {ggl} = require('apollo-server-express');
-const { model } = require('mongoose');
 
 const typeDefs = ggl`
 type User{
