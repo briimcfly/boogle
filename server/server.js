@@ -19,8 +19,14 @@ async function startApolloServer(typeDefs,resolvers){
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: authMiddleware
+    context: ({req}) => {
+      const updatedReq = authMiddleware(req);
+      return {
+        req: updatedReq
+      }
+    }
   });
+  
   await server.start();
   server.applyMiddleware({ app });
   console.log(`GraphQL Running @ http://localhost:${PORT}${server.graphqlPath}`);
@@ -30,9 +36,6 @@ async function startApolloServer(typeDefs,resolvers){
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
-
-//Old REST API Routes
-// app.use(routes);
 
 db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
