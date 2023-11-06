@@ -9,6 +9,10 @@ const resolvers = {
                 return await User.findById(context.user._id).populate('savedBooks');
             }
             throw new AuthenticationError('You need to be logged in!');
+        },
+        user: async(_, {username, id}) => {
+            const query = username ? {username} : {_id: id};
+            return await User.findOne(query).populate('savedBooks');
         }
     },
     Mutation: {
@@ -38,7 +42,7 @@ const resolvers = {
                     context.user._id,
                     {$addToSet: {savedBooks: bookInput}},
                     {new: true, runValidators: true}
-                );
+                ).populate('savedBooks');
                 return updatedUser;
             }
             throw new AuthenticationError('You need to be logged in!');
@@ -49,7 +53,7 @@ const resolvers = {
                     context.user._id,
                     {$pull: {savedBooks: {bookId}}},
                     {new: true}
-                )
+                ).populate('savedBooks');
                 return updatedUser;
             }
             throw new AuthenticationError('You need to be logged in!');
