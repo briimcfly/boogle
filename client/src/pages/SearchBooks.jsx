@@ -23,7 +23,6 @@ const SAVE_BOOK = gql`
       title
       description
       image
-      // Include any other fields your saveBook mutation needs/returns
     }
   }
 `;
